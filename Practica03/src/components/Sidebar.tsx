@@ -1,13 +1,22 @@
 import { Link } from "react-router-dom";
-import { LayoutDashboard, Package, Users } from "lucide-react";
-
-const menuItems = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/catalogo", label: "Catálogo", icon: Package },
-  { to: "/mi-red", label: "Mi Red", icon: Users },
-];
+import { LayoutDashboard, Package, Store, Users } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const Sidebar = ({ isCollapsed }: { isCollapsed: boolean }) => {
+  const { userRole } = useAuth();
+
+  const menuItems = [
+    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/tienda", label: "Tienda", icon: Store },
+    { to: "/catalogo", label: "Catálogo", icon: Package },
+    { to: "/mi-red", label: "Mi Red", icon: Users },
+  ];
+
+  const visibleItems =
+    userRole === "admin"
+      ? menuItems
+      : menuItems.filter((item) => item.to === "/tienda" || item.to === "/catalogo");
+
   return (
     <aside
       className={`
@@ -24,7 +33,7 @@ const Sidebar = ({ isCollapsed }: { isCollapsed: boolean }) => {
       </div>
 
       <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map(({ to, label, icon: Icon }) => (
+        {visibleItems.map(({ to, label, icon: Icon }) => (
           <Link
             key={to}
             to={to}

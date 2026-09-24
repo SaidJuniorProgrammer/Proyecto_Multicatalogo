@@ -25,12 +25,20 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      if (respuesta.ok) {
-        login(email);
-        navigate("/");
-      } else {
-        setError("Credenciales incorrectas. Verifica tu correo y contraseña.");
+      const data = await respuesta.json();
+
+      if (respuesta.ok && data?.email && data?.rol) {
+        login(data.email, data.rol, data.token);
+
+        if (data.rol === "admin") {
+          navigate("/");
+        } else {
+          navigate("/tienda");
+        }
+        return;
       }
+
+      setError(data?.error || "Credenciales incorrectas. Verifica tu correo y contraseña.");
     } catch (err) {
       console.error("Error de conexión:", err);
       setError("No se pudo conectar al servidor. Verifica que el backend esté encendido.");
