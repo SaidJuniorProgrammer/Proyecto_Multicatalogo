@@ -108,7 +108,9 @@ const DetalleProducto = () => {
       {lightboxAbierto && imagenActiva && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() => setImagenActiva(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Vista ampliada del producto"
         >
           <div className="relative max-w-4xl w-full">
             <button
